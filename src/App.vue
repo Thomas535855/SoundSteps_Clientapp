@@ -1,14 +1,24 @@
+<script setup lang="ts">
+</script>
+
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <div class="nav-content">
+      <div class="nav-title">SoundSteps</div>
+      <div class="nav-links">
+        <router-link to="/">Home</router-link>
+        <router-link to="/user/register">Register</router-link>
+      </div>
+    </div>
   </nav>
-  <router-view/>
+  <router-view />
 </template>
 
-<style>
+
+
+<style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
@@ -16,15 +26,46 @@
 }
 
 nav {
-  padding: 30px;
-}
+  display: flex;
+  align-items: center;
+  padding: 15px 30px;
+  background-color: #2b2b2b;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+  .nav-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
 
-nav a.router-link-exact-active {
-  color: #42b983;
+  .nav-title {
+    font-weight: bold;
+    font-size: 20px;
+    color: #efefef;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 20px;
+  }
+
+  a {
+    font-weight: bold;
+    color: #efefef;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+    transition: color 0.3s ease, background-color 0.3s ease;
+
+    &:hover {
+      color: #007acc;
+      background-color: rgba(0, 122, 204, 0.1);
+    }
+
+    &.router-link-exact-active {
+      color: #007acc;
+    }
+  }
 }
 </style>
