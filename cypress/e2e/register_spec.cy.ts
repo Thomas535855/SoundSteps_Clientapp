@@ -1,5 +1,3 @@
-/// <reference types="cypress" />
-
 describe('template spec', () => {
   it('should register a new user', () => {
     cy.visit('/user/register')
