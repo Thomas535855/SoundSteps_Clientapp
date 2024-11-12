@@ -2,7 +2,7 @@
 
 describe('template spec', () => {
   it('should register a new user', () => {
-    cy.visit('/users/register')
+    cy.visit('/user/register')
 
     cy.get('input[type="text"]').type('testuser')
     cy.get('input[type="password"]').type('password')
