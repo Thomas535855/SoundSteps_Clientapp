@@ -21,7 +21,7 @@ export default defineComponent({
     methods: {
         async registerUser() {
             try {
-                const response = await fetch(`https://localhost:7295/Register`, {
+                const response = await fetch(`https://localhost:7295/api/Users/Register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -34,9 +34,8 @@ export default defineComponent({
                 });
 
                 if (response.ok) {
-
+                    this.$router.push('/user/login');
                     console.log('registration succesful:');
-                    location.reload();
                 }
                 else {
                     console.log('registration failed');
@@ -53,7 +52,7 @@ export default defineComponent({
 <template>
 <div class="wrapper">    
     <div class="container">
-        <form @submit="registerUser()">
+        <form @submit.prevent="registerUser()">
             <div>
                 <h1 class="title">Register</h1>
                 <p class="input-type">Username:</p>

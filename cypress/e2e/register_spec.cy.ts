@@ -9,5 +9,7 @@ describe('template spec', () => {
     cy.get('input[type="email"]').type('email@email.com')
 
     cy.get('form').submit()
+
+    cy.url().should('include', '/user/Login') 
   })
 })
