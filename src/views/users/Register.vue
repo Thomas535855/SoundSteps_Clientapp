@@ -35,14 +35,16 @@ export default defineComponent({
 
                 if (response.ok) {
                     this.$router.push('/user/login');
-                    console.log('registration succesful:');
+                    console.log('Registration successful');
+                } else if (response.status === 409) {
+                    const errorData = await response.json();
+                    console.log('Registration failed:', errorData.Message);
+                    alert("Username or email already exists, try again");
+                } else {
+                    console.log('Registration failed with status:', response.status);
                 }
-                else {
-                    console.log('registration failed');
-                }
-            }
-            catch (error) {
-                console.log("An error occured: ", error);
+            } catch (error) {
+                console.log("An error occurred: ", error);
             }
         }
     }
@@ -50,27 +52,27 @@ export default defineComponent({
 </script>
 
 <template>
-<div class="wrapper">    
-    <div class="container">
-        <form @submit.prevent="registerUser()">
-            <div>
-                <h1 class="title">Register</h1>
-                <p class="input-type">Username:</p>
-                <InputField type="text" v-model="username"></InputField>
+    <div class="wrapper">
+        <div class="container">
+            <form @submit.prevent="registerUser()">
+                <div>
+                    <h1 class="title">Register</h1>
+                    <p class="input-type">Username:</p>
+                    <InputField type="text" v-model="username"></InputField>
 
-                <p class="input-type">Email:</p>
-                <InputField type="email" v-model="email"></InputField>
+                    <p class="input-type">Email:</p>
+                    <InputField type="email" v-model="email"></InputField>
 
-                <p class="input-type">Password:</p>
-                <InputField type="password" v-model="password"></InputField>
-                
-                <Button text="Register"></Button>
-            </div>
-        </form>
+                    <p class="input-type">Password:</p>
+                    <InputField type="password" v-model="password"></InputField>
 
-        <p class="text">Already have an account? <router-link class="link" to="/">Sign in</router-link></p>
+                    <Button text="Register"></Button>
+                </div>
+            </form>
+
+            <p class="text">Already have an account? <router-link class="link" to="/">Sign in</router-link></p>
+        </div>
     </div>
-</div>
 </template>
 
 <style>

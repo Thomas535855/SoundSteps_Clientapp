@@ -10,6 +10,6 @@ describe('template spec', () => {
 
     cy.get('form').submit()
 
-    cy.url().should('include', '/user/Login') 
+    cy.url().should('include', 'http://localhost:8080/#/user/login') 
   })
 })
