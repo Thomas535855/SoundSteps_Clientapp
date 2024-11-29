@@ -11,6 +11,7 @@ on:
 jobs:
   cypress-run:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout repository
@@ -24,13 +25,7 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Start the application
-        run: npm start &
+      - name: Start the application and run Cypress tests
+        run: npx start-server-and-test start http://localhost:8080 cypress:run
         env:
           CI: true
-
-      - name: Wait for application to be ready
-        run: npx wait-on http://localhost:8080
-
-      - name: Run Cypress tests
-        run: npx cypress run
