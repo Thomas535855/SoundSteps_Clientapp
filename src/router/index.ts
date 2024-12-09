@@ -1,7 +1,8 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import registerView from '../views/users/Register.vue'
-import loginView from '../views/users/Login.vue'
+import SelectInstrument from '@/views/users/SelectInstrument.vue'
+import CreateInstrument from '@/views/instruments/Create.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -15,10 +16,15 @@ const routes: Array<RouteRecordRaw> = [
     component: registerView
   },
   {
-    path: '/user/Login',
-    name: 'Login',
-    component: loginView
+    path: '/user/SelectInstrument',
+    name: 'SelectInstrument',
+    component: SelectInstrument
   },
+  {
+    path  : '/instruments/Create',
+    name  : 'CreateInstrument',
+    component : CreateInstrument
+  }
 ]
 
 const router = createRouter({

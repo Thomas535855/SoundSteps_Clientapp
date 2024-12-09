@@ -8,7 +8,8 @@
       <div class="nav-links">
         <router-link to="/">Home</router-link>
         <router-link to="/user/register">Register</router-link>
-        <router-link to="/user/login">Login</router-link>
+        <router-link to="/user/SelectInstrument">Select Instrument</router-link>
+        <router-link to="/instruments/Create">Create Instrument</router-link>
       </div>
     </div>
   </nav>

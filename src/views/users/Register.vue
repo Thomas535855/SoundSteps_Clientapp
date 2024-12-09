@@ -21,7 +21,7 @@ export default defineComponent({
     methods: {
         async registerUser() {
             try {
-                const response = await fetch(`https://localhost:7295/api/Users/Register`, {
+                const response = await fetch(`http://localhost:7295/api/Users/Register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -34,8 +34,9 @@ export default defineComponent({
                 });
 
                 if (response.ok) {
-                    this.$router.push('/user/login');
+                    this.$router.push('/user/SelectInstrument');
                     console.log('Registration successful');
+                    
                 } else if (response.status === 409) {
                     const errorData = await response.json();
                     console.log('Registration failed:', errorData.Message);
@@ -83,7 +84,7 @@ body {
     background-repeat: no-repeat;
     background-size: cover;
     margin: 0;
-    font-family: var(--sds-typography-body-font-family);
+    font-family: var(--sds-typography-body-font-family),serif;
 }
 
 .input-type {
@@ -110,7 +111,7 @@ body {
     flex-direction: column;
     background-color: #ffffff;
     border-radius: 10px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .wrapper {
