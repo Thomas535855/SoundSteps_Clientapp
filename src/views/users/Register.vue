@@ -21,7 +21,7 @@ export default defineComponent({
     methods: {
         async registerUser() {
             try {
-                const response = await fetch(`http://localhost:7295/api/Users/Register`, {
+                const response = await fetch(`http://localhost:5029/api/Users/Register`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
