@@ -11,6 +11,10 @@ export default defineComponent({
   data() {
     return {
       user: {
+        userId: 2,
+        username: 'Thomas',
+        email: 'Thomas@gsdfd.com',
+        password: 'fFsdfsd',
         skillLevel: 5,
       },
     };
@@ -66,18 +70,51 @@ export default defineComponent({
       }
     },
 
+    async updateUserSkillLevel(userId: number, skillLevel: number) {
+      try {
+        const url = `http://localhost:5029/api/Users/Update`;
+
+        const updatedUser = {
+          userId: userId,
+          username: this.user.username,
+          email: this.user.email,
+          password: this.user.password,
+          skillLevel: skillLevel 
+        };
+
+        const response = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedUser),
+        });
+
+        if (!response.ok) {
+          const errorDetails = await response.text();
+          console.error('Failed to update user skill level:', response.statusText, errorDetails);
+          throw new Error(`Failed to update user skill level: ${response.statusText}`);
+        }
+
+        const updatedResponse = await response.json();
+        console.log('User skill level updated successfully:', updatedResponse);
+      } catch (error) {
+        console.error('Error in updateUserSkillLevel:', error);
+      }
+    },
 
 
-    submitInstrument() {
-      const userId = 1;
+    async submitInstrument() {
       const instrumentName = this.selectedInstrument?.name;
-      
+
       if (!instrumentName) {
         console.error('No valid instrument selected.');
         return;
       }
 
-      this.addInstrumentToUser(userId, instrumentName);
+      await this.updateUserSkillLevel(this.user.userId, this.user.skillLevel);
+
+      await this.addInstrumentToUser(this.user.userId, instrumentName);
     }
 
   },
