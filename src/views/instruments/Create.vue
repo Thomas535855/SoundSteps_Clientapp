@@ -22,7 +22,7 @@ export default defineComponent({
       }
 
       try {
-        const response = await fetch('http://localhost:7295/api/Instrument/Create', {
+        const response = await fetch('http://localhost:5029/api/Instrument/Create', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
