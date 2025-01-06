@@ -56,7 +56,7 @@ jobs:
     # Step 6: Start Docker Compose Services
     - name: Start Docker Compose Services
       run: |
-        docker-compose up -d
+        docker compose up -d
         docker ps
 
     # Step 7: Wait for Services to Start
