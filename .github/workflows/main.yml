@@ -48,9 +48,10 @@ jobs:
     - name: Build and push Frontend Docker image
       uses: docker/build-push-action@v4
       with:
-        context: D:/Fontys School/Semester 3/Projects/SoundSteps_FrontEnd/SoundSteps_Clientapp
+        context: ./SoundSteps_Clientapp
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:frontend
+
 
     # Step 6: Start Docker Compose Services
     - name: Start Docker Compose Services
