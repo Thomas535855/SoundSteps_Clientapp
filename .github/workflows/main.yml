@@ -48,7 +48,7 @@ jobs:
     - name: Build and push Frontend Docker image
       uses: docker/build-push-action@v4
       with:
-        context: ./SoundSteps_Clientapp
+        context: .
         push: true
         tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:frontend
 
