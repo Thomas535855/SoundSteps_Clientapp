@@ -46,10 +46,11 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       # Step 4: Build and push Docker images for frontend
-      - name: Build and push Docker image
+      - name: Build and push Frontend Docker image
         uses: docker/build-push-action@v4
         with:
-          context: .
+          context: ./frontend
+          file: ./frontend/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:frontend
 
