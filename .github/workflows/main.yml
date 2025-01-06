@@ -45,20 +45,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 4: Build and push Docker images for backend and frontend
-      - name: Build and push Backend Docker image
+      # Step 4: Build and push Docker images for frontend
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./backend
-          file: ./backend/SoundSteps.API/Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:backend
-
-      - name: Build and push Frontend Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
+          context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:frontend
 
