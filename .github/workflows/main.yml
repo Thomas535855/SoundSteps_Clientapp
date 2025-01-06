@@ -1,86 +1,30 @@
-name: Build, Deploy, and Run E2E Tests
+name: Build and Push Docker Image
 
 on:
   push:
     branches:
       - master
-  pull_request:
 
 jobs:
-  e2e-tests:
+  build:
     runs-on: ubuntu-latest
 
-    services:
-      sqlserver:
-        image: mcr.microsoft.com/mssql/server:2022-latest
-        env:
-          ACCEPT_EULA: "Y"
-          SA_PASSWORD: "MyStr0ngP@ssw0rd!"
-          MSSQL_PID: "Express"
-        ports:
-          - "1433:1433"
-
     steps:
-      # Step 1: Checkout frontend and backend repositories
-      - name: Checkout frontend repository
-        uses: actions/checkout@v3
-        with:
-          repository: Thomas535855/SoundSteps_Clientapp
-          path: frontend
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-      - name: Checkout backend repository
-        uses: actions/checkout@v3
-        with:
-          repository: Thomas535855/SoundSteps_API
-          path: backend
-
-      # Step 2: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      # Step 3: Log in to Docker Hub
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      # Step 4: Build and push Docker images for frontend
-      - name: Build and push Frontend Docker image
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
+          context: .
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:frontend
-
-      # Step 5: Start Docker Compose Services (from backend repository)
-      - name: Start Docker Compose Services
-        run: |
-          cd ./backend/SoundSteps.API  # Change directory to the location of the docker-compose.yml file
-          docker compose -f docker-compose.yml up -d  # Run Docker Compose in the backend directory
-
-      # Step 6: Wait for Services to Start
-      - name: Wait for services to be ready
-        run: |
-          sleep 30 # Adjust time as needed for services to initialize
-
-      # Step 7: Set up Node.js for Cypress
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      # Step 8: Install Cypress and Dependencies
-      - name: Install Cypress and Dependencies
-        run: |
-          npm install
-          npx cypress install
-
-      # Step 9: Run Cypress Tests
-      - name: Run Cypress Tests
-        run: |
-          npx cypress run
-        env:
-          CYPRESS_API_URL: http://localhost:5029 # Backend URL
-          CYPRESS_BASE_URL: http://localhost:8080 # Frontend URL
