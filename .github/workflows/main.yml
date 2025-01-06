@@ -1,30 +1,82 @@
-name: Build and Push Docker Image
+name: Build, Deploy, and Run E2E Tests
 
 on:
   push:
     branches:
       - master
+  pull_request:
 
 jobs:
-  build:
+  e2e-tests:
     runs-on: ubuntu-latest
 
+    services:
+      sqlserver:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: "Y"
+          SA_PASSWORD: "MyStr0ngP@ssw0rd!"
+          MSSQL_PID: "Express"
+        ports:
+          - "1433:1433"
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    # Step 1: Checkout the repository
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+    # Step 2: Set up Docker Buildx
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
 
-      - name: Log in to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+    # Step 3: Log in to Docker Hub
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v2
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:frontend
+    # Step 4: Build and Push API Docker Image
+    - name: Build and push API Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:dev
+
+    # Step 5: Build and Push Frontend Docker Image
+    - name: Build and push Frontend Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: D:/Fontys School/Semester 3/Projects/SoundSteps_FrontEnd/SoundSteps_Clientapp
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:frontend
+
+    # Step 6: Start Docker Compose Services
+    - name: Start Docker Compose Services
+      run: |
+        docker-compose up -d
+        docker ps
+
+    # Step 7: Wait for Services to Start
+    - name: Wait for services to be ready
+      run: |
+        sleep 30 # Adjust time as needed for services to initialize
+
+    # Step 8: Install Cypress and Run E2E Tests
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    - name: Install Cypress and Dependencies
+      run: |
+        npm install
+        npx cypress install
+
+    - name: Run Cypress Tests
+      run: |
+        npx cypress run
+      env:
+        CYPRESS_API_URL: http://localhost:5029 # Backend
+        CYPRESS_BASE_URL: http://localhost:8080 # Frontend
