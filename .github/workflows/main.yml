@@ -25,13 +25,13 @@ jobs:
       - name: Checkout frontend repository
         uses: actions/checkout@v3
         with:
-          repository: https://github.com/Thomas535855/SoundSteps_Clientapp
+          repository: Thomas535855/SoundSteps_Clientapp
           path: frontend
 
       - name: Checkout backend repository
         uses: actions/checkout@v3
         with:
-          repository: https://github.com/Thomas535855/SoundSteps_API
+          repository: Thomas535855/SoundSteps_API
           path: backend
 
       # Step 2: Set up Docker Buildx
