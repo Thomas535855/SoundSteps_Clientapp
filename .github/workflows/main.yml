@@ -57,7 +57,8 @@ jobs:
       # Step 5: Start Docker Compose Services (from backend repository)
       - name: Start Docker Compose Services
         run: |
-          docker compose -f ./backend/SoundSteps.API/docker-compose.yaml up -d
+          cd ./backend/SoundSteps.API  # Change directory to the location of the docker-compose.yml file
+          docker compose -f docker-compose.yml up -d  # Run Docker Compose in the backend directory
 
       # Step 6: Wait for Services to Start
       - name: Wait for services to be ready
