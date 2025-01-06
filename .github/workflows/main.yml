@@ -21,63 +21,74 @@ jobs:
           - "1433:1433"
 
     steps:
-    # Step 1: Checkout the repository
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      # Step 1: Checkout frontend and backend repositories
+      - name: Checkout frontend repository
+        uses: actions/checkout@v3
+        with:
+          repository: your-org/your-frontend-repo
+          path: frontend
 
-    # Step 2: Set up Docker Buildx
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
+      - name: Checkout backend repository
+        uses: actions/checkout@v3
+        with:
+          repository: your-org/your-backend-repo
+          path: backend
 
-    # Step 3: Log in to Docker Hub
-    - name: Log in to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
+      # Step 2: Set up Docker Buildx
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
 
-    # Step 4: Build and Push API Docker Image
-    - name: Build and push API Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:dev
+      # Step 3: Log in to Docker Hub
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-    # Step 5: Build and Push Frontend Docker Image
-    - name: Build and push Frontend Docker image
-      uses: docker/build-push-action@v4
-      with:
-        context: .
-        push: true
-        tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:frontend
+      # Step 4: Build and push Docker images for backend and frontend
+      - name: Build and push Backend Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          file: ./backend/SoundSteps.API/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:backend
 
+      - name: Build and push Frontend Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/soundsteps:frontend
 
-    # Step 6: Start Docker Compose Services
-    - name: Start Docker Compose Services
-      run: |
-        docker compose up -d
-        docker ps
+      # Step 5: Start Docker Compose Services (from backend repository)
+      - name: Start Docker Compose Services
+        run: |
+          docker compose -f ./backend/SoundSteps.API/docker-compose.yml up -d
+        working-directory: ./backend
 
-    # Step 7: Wait for Services to Start
-    - name: Wait for services to be ready
-      run: |
-        sleep 30 # Adjust time as needed for services to initialize
+      # Step 6: Wait for Services to Start
+      - name: Wait for services to be ready
+        run: |
+          sleep 30 # Adjust time as needed for services to initialize
 
-    # Step 8: Install Cypress and Run E2E Tests
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: 18
+      # Step 7: Set up Node.js for Cypress
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    - name: Install Cypress and Dependencies
-      run: |
-        npm install
-        npx cypress install
+      # Step 8: Install Cypress and Dependencies
+      - name: Install Cypress and Dependencies
+        run: |
+          npm install
+          npx cypress install
 
-    - name: Run Cypress Tests
-      run: |
-        npx cypress run
-      env:
-        CYPRESS_API_URL: http://localhost:5029 # Backend
-        CYPRESS_BASE_URL: http://localhost:8080 # Frontend
+      # Step 9: Run Cypress Tests
+      - name: Run Cypress Tests
+        run: |
+          npx cypress run
+        env:
+          CYPRESS_API_URL: http://localhost:5029 # Backend URL
+          CYPRESS_BASE_URL: http://localhost:8080 # Frontend URL
