@@ -1,29 +1,16 @@
 /// <reference types="cypress" />
+const timestamp = Date.now();
+const username = `testuser${timestamp}`;
+const email = `testuser@${timestamp}.com`;
 
 describe('User Registration Test', () => {
   const testUser = {
-    username: 'testuser',
+    username: username,
     password: 'password',
-    email: 'email@email.com',
+    email: email,
   };
 
-  const apiUrl = 'http://localhost:7295/api/Users';
-
-  beforeEach(() => {
-    cy.request({
-      method: 'DELETE',
-      url: `${apiUrl}/DeleteByEmail?email=${testUser.email}`,
-      failOnStatusCode: false,
-    });
-  });
-
-  afterEach(() => {
-    cy.request({
-      method: 'DELETE',
-      url: `${apiUrl}/DeleteByEmail?email=${testUser.email}`,
-      failOnStatusCode: false,
-    });
-  });
+  const apiUrl = 'http://localhost:5029/api/Users';
 
   it('should register a new user', () => {
     cy.visit('/user/register');
@@ -34,6 +21,6 @@ describe('User Registration Test', () => {
 
     cy.get('form').submit();
 
-    cy.url().should('include', '/#/user/selectinstrument');
+    cy.url().should('include', '/#/user/SelectInstrument');
   });
 });
