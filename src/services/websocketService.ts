@@ -2,9 +2,8 @@ import { useToast } from "vue-toastification";
 
 class WebSocketService {
     private socket: WebSocket | null = null;
-    private toast = useToast(); // Toast instance for notifications
+    private toast = useToast();
 
-    // Automatically connect WebSocket
     connect(url: string): void {
         if (this.socket) {
             console.warn("WebSocket is already connected.");
@@ -20,12 +19,12 @@ class WebSocketService {
         this.socket.onmessage = (event: MessageEvent) => {
             const message = event.data;
             console.log("Message received:", message);
-            this.showToast(message); // Show toast notification
+            this.showToast(message);
         };
 
         this.socket.onclose = () => {
             console.log("WebSocket connection closed. Reconnecting...");
-            this.reconnect(url); // Attempt to reconnect
+            this.reconnect(url);
         };
 
         this.socket.onerror = (error) => {
@@ -37,11 +36,11 @@ class WebSocketService {
         setTimeout(() => {
             console.log("Reconnecting to WebSocket...");
             this.connect(url);
-        }, 5000); // Retry connection after 5 seconds
+        }, 5000);
     }
 
     private showToast(message: string): void {
-        this.toast.success(message); // Use success toast for messages
+        this.toast.success(message);
     }
 
     disconnect(): void {
