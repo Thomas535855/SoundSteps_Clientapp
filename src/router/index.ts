@@ -20,11 +20,6 @@ const routes: Array<RouteRecordRaw> = [
     name: 'SelectInstrument',
     component: SelectInstrument
   },
-  {
-    path  : '/instruments/Create',
-    name  : 'CreateInstrument',
-    component : CreateInstrument
-  }
 ]
 
 const router = createRouter({
